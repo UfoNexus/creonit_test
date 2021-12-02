@@ -6,7 +6,7 @@ from . import views
 app_name = 'quiz'
 
 urlpatterns = [
-    path('quiz_list/', views.quiz_list, name='quiz_list'),
+    path('quiz_list/', views.QuizListView.as_view(), name='quiz_list'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
