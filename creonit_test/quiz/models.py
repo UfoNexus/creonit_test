@@ -9,7 +9,6 @@ class Quiz(models.Model):
     description = models.TextField()
     creation_date = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
-    # questions = models.ManyToManyField(Question)
 
     class Meta:
         ordering = ['-creation_date']

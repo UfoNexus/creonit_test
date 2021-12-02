@@ -44,6 +44,28 @@ class QuizSerializer(serializers.ModelSerializer):
             'creation_date', 'is_active', 'questions'
         ]
 
+    def create_answers(self, answer_data):
+        question = answer_data.get('question')
+        text = answer_data.get('text')
+        is_correct = answer_data.get('is_correct')
+        Answer.objects.create(question=question,
+                              text=text,
+                              is_correct=is_correct)
+        return
+
+    def create_question(self, questions_data):
+        quiz = questions_data.get('quiz')
+        text = questions_data.get('text')
+        order = questions_data.get('order')
+        new_question = Question.objects.create(quiz=quiz,
+                                               text=text,
+                                               order=order)
+        new_question.save()
+        # answers_dict = questions_data.get('answers')
+        # for answer in answers_dict:
+        #     self.create_answers(answer)
+        return
+
     def update(self, instance, validated_data):
         instance.title = validated_data.get('title', instance.title)
         instance.slug = validated_data.get('slug', instance.slug)
@@ -61,15 +83,21 @@ class QuizSerializer(serializers.ModelSerializer):
         questions_data = validated_data.get('questions')
         question_list = list(instance.questions.all())
         for question in questions_data:
-            this_question = question_list.pop(0)
-            this_question.text = question.get('text', this_question.text)
-            this_question.order = question.get('order', this_question.order)
-            answers_list = list(this_question.answers.all())
-            for answer in question.get('answers'):
-                this_answer = answers_list.pop(0)
-                this_answer.text = answer.get('text', this_answer.text)
-                this_answer.is_correct = answer.get('is_correct', this_answer.is_correct)
-                this_answer.save()
-            this_question.save()
+            try:
+                this_question = question_list.pop(0)
+                this_question.text = question.get('text', this_question.text)
+                this_question.order = question.get('order', this_question.order)
+                answers_list = list(this_question.answers.all())
+                for answer in question.get('answers'):
+                    try:
+                        this_answer = answers_list.pop(0)
+                        this_answer.text = answer.get('text', this_answer.text)
+                        this_answer.is_correct = answer.get('is_correct', this_answer.is_correct)
+                        this_answer.save()
+                    except IndexError:
+                        self.create_answers(answer)
+                this_question.save()
+            except IndexError:
+                self.create_question(question)
 
         return instance
