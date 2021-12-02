@@ -1,14 +1,28 @@
-from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 
+from .models import Answer, Question, Quiz
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+
+class QuizSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ['url', 'username', 'email', 'groups']
+        model = Quiz
+        fields = '__all__'
+        # fields = [
+        #     'pk', 'title', 'slug', 'questions_count', 'description',
+        #     'creation_date', 'is_active'
+        # ]
 
 
-class GroupSerializer(serializers.HyperlinkedModelSerializer):
+class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Group
-        fields = ['url', 'name']
+        model = Question
+        fields = '__all__'
+        # fields = [
+        #     'quiz', 'text', 'order'
+        # ]
+
+
+class AnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Answer
+        fields = '__all__'

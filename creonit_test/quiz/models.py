@@ -8,6 +8,7 @@ class Quiz(models.Model):
     questions_count = models.IntegerField(default=0)
     description = models.TextField()
     creation_date = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
 
     class Meta:
         ordering = ['-creation_date']
