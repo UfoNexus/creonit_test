@@ -7,6 +7,7 @@ app_name = 'quiz'
 
 urlpatterns = [
     path('quiz_list/', views.QuizListView.as_view(), name='quiz_list'),
+    path('quiz/<slug:slug>', views.QuizView.as_view(), name='quiz'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

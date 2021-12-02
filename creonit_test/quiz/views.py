@@ -9,3 +9,9 @@ from .serializers import AnswerSerializer, QuestionSerializer, QuizSerializer
 class QuizListView(generics.ListCreateAPIView):
     queryset = Quiz.objects.all()
     serializer_class = QuizSerializer
+
+
+class QuizView(generics.RetrieveUpdateDestroyAPIView):
+    lookup_field = 'slug'
+    queryset = Quiz.objects.all()
+    serializer_class = QuizSerializer
