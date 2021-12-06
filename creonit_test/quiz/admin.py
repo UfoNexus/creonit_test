@@ -4,10 +4,47 @@ import nested_admin
 from .models import Answer, Participant, Question, Quiz
 
 
-class AnswerInline(nested_admin.NestedTabularInline):
+class AnswerAdmin(admin.ModelAdmin):
     """
     Вывод объектов Answer в админке.
     Также отображаются на странице вопроса и странице теста.
+    """
+
+    list_display = (
+        'pk',
+        'question',
+        'text',
+        'is_correct'
+    )
+    list_editable = ('is_correct',)
+    search_fields = ('text', 'question')
+    list_filter = ('question',)
+    empty_value_display = '-пусто-'
+    list_per_page = 10
+
+
+class QuestionAdmin(admin.ModelAdmin):
+    """
+    Вывод объектов Question в админке.
+    Также отображаются на странице теста.
+    """
+
+    list_display = (
+        'pk',
+        'quiz',
+        'text',
+        'order'
+    )
+    list_editable = ('order',)
+    search_fields = ('text', 'quiz')
+    list_filter = ('quiz',)
+    empty_value_display = '-пусто-'
+    list_per_page = 10
+
+
+class AnswerInline(nested_admin.NestedTabularInline):
+    """
+    Добавление отображение ответов при редактировании вопроса
     """
 
     model = Answer
@@ -16,8 +53,7 @@ class AnswerInline(nested_admin.NestedTabularInline):
 
 class QuestionInline(nested_admin.NestedTabularInline):
     """
-    Вывод объектов Question в админке.
-    Также отображаются на странице теста.
+    Добавление отображение вопросов и ответов при редактировании теста
     """
 
     model = Question
@@ -35,9 +71,21 @@ class QuizAdmin(nested_admin.NestedModelAdmin):
     inlines = [
         QuestionInline
     ]
+    list_display = (
+        'pk',
+        'title',
+        'slug',
+        'description',
+        'is_active'
+    )
+    list_editable = ('is_active',)
+    search_fields = ('title', 'description')
+    list_filter = ('creation_date', 'is_active',)
+    empty_value_display = '-пусто-'
+    list_per_page = 10
 
 
 admin.site.register(Quiz, QuizAdmin)
-admin.site.register(Question)
-admin.site.register(Answer)
+admin.site.register(Question, QuestionAdmin)
+admin.site.register(Answer, AnswerAdmin)
 admin.site.register(Participant)
