@@ -6,7 +6,10 @@ from . import views
 app_name = 'quiz'
 
 urlpatterns = [
+    # Страница списка тестов
     path('quiz_list/', views.QuizListView.as_view(), name='quiz_list'),
+
+    # Детальная страница выбранного теста
     path('quiz/<slug:slug>', views.QuizView.as_view(), name='quiz'),
 ]
 

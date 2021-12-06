@@ -3,6 +3,10 @@ from django.db import models
 
 
 class Quiz(models.Model):
+    """
+    Модель теста
+    """
+
     title = models.CharField(max_length=150)
     slug = models.SlugField()
     questions_count = models.IntegerField(default=0)
@@ -19,6 +23,10 @@ class Quiz(models.Model):
 
 
 class Question(models.Model):
+    """
+    Модель вопроса для объекта модели Quiz
+    """
+
     quiz = models.ForeignKey(Quiz,
                              on_delete=models.CASCADE,
                              related_name='questions')
@@ -33,6 +41,10 @@ class Question(models.Model):
 
 
 class Answer(models.Model):
+    """
+    Модель ответа для объекта модели Question
+    """
+
     question = models.ForeignKey(Question,
                                  on_delete=models.CASCADE,
                                  related_name='answers')
@@ -44,9 +56,17 @@ class Answer(models.Model):
 
 
 class Participant(models.Model):
+    """
+    Модель пользователя, который прошел тест.
+    (!!!) На данный момент не используется, так как не реализована
+    механика прохождения теста пользователем.
+    """
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     correct_answers = models.IntegerField(default=0)
+    picked_answers = models.ManyToManyField(Answer,
+                                            symmetrical=False)
     if_completed = models.BooleanField(default=False)
     date_completed = models.DateTimeField(auto_now_add=True)
 
